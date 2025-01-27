@@ -1,0 +1,7 @@
+{
+  "name": "rawlib",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
