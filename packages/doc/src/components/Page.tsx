@@ -30,6 +30,9 @@ export function Page(props: PageProps) {
         <div class={styles.Content}>{props.text}</div>
       </div>
       <div class={styles.Preview}>{props.preview}</div>
+      <div class={styles.BadScreen}>
+        <p>The screen is<br/>too small<br/>to display.</p>
+      </div>
     </div>
   )
 }
