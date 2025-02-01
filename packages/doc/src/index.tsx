@@ -1,8 +1,11 @@
 /* @refresh reload */
-import { render } from 'solid-js/web'
-import './css-reset.scss'
-import App from './App.tsx'
+import { render } from 'solid-js/web';
 
-const root = document.getElementById('root')
+import App from './App.tsx';
 
-render(() => <App />, root!)
+import '@wooorm/starry-night/style/both.css';
+import './css-reset.scss';
+
+const root = document.getElementById('root');
+
+render(() => <App />, root!);
