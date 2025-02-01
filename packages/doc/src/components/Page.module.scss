@@ -5,38 +5,71 @@
 }
 
 .Text {
+  display: flex;
   flex: 0 0 30rem;
+  width: 30rem;
+  flex-direction: column;
   border-right: 1px solid var.$color-border;
-  padding: 1rem;
-  overflow: auto;
 
-  h1 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
+  .Nav {
+    display: flex;
+    height: 2rem;
+    border-bottom: 1px solid var.$color-border;
 
-  p {
-    margin-bottom: 0.5rem;
-  }
+    .NavButton {
+      display: flex;
+      height: calc(2rem - 1px);
+      width: calc(2rem - 1px);
+      align-items: center;
+      justify-content: center;
+      background-color: var.$color-white;
+      border: none;
+      border-right: 1px solid var.$color-border;
+      cursor: pointer;
 
-  pre {
-    border-radius: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background-color: var.$color-code-bg;
-    margin-bottom: 0.5rem;
-    overflow: auto;
+      &:active {
+        background-color: var.$color-slate-50;
+      }
 
-    code {
-      background-color: transparent;
-      padding: 0;
-      border-radius: 0;
+      &.Active {
+        background-color: var.$color-slate-100;
+      }
     }
   }
 
-  code {
-    background-color: var.$color-code-bg;
-    padding: 0.125rem 0.25rem;
-    border-radius: 0.25rem;
+  .Content {
+    flex: 1 1 0;
+    padding: 1rem;
+    overflow: auto;
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin-bottom: 0.5rem;
+    }
+
+    pre {
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background-color: var.$color-code-bg;
+      margin-bottom: 0.5rem;
+      overflow: auto;
+
+      code {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+      }
+    }
+
+    code {
+      background-color: var.$color-code-bg;
+      padding: 0.125rem 0.25rem;
+      border-radius: 0.25rem;
+    }
   }
 }
 

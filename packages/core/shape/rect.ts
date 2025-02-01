@@ -1,20 +1,20 @@
 import type { Layer } from "../layer";
 import { Layout } from "../layout";
 import type { Position } from "../position";
-import { calcLeftBottomXAndY } from "../utils";
+import { calcLeftBottomXAndY, getVal, type ValGetter } from "../utils";
 
 export interface RectShapeOpts {
-  width: number;
-  height: number;
-  fillStyle: string;
+  width: ValGetter<number>;
+  height: ValGetter<number>;
+  fillStyle: ValGetter<string>;
 
   position?: Position;
 }
 
 export class RectShape {
-  width: number;
-  height: number;
-  fillStyle: string;
+  width: ValGetter<number>;
+  height: ValGetter<number>;
+  fillStyle: ValGetter<string>;
 
   position?: Position;
   layout?: Layout;
@@ -33,12 +33,16 @@ export class RectShape {
       anchor: 'c',
       point: () => parent.layout.c(),
     };
-    let { x, y } = calcLeftBottomXAndY(p, this.width, this.height);
+    const w = getVal(this.width);
+    const h = getVal(this.height);
+    let { x, y } = calcLeftBottomXAndY(p, w, h);
     return {
-      layout: new Layout(x, x + this.width, y - this.height, y),
+      layout: new Layout(x, x + w, y - h, y),
       recalcLayout: () => {
-        let { x, y } = calcLeftBottomXAndY(p, this.width, this.height);
-        this.layout = new Layout(x, x + this.width, y - this.height, y);
+        const w = getVal(this.width);
+        const h = getVal(this.height);
+        let { x, y } = calcLeftBottomXAndY(p, w, h);
+        this.layout = new Layout(x, x + w, y - h, y);
       }
     }
   }
@@ -56,9 +60,11 @@ export class RectShape {
       })
     }
 
+    const layout = this.layout!;
+
     ctx.save();
-    ctx.setFillStyle(this.fillStyle);
-    ctx.fillRect(this.layout!.left, this.layout!.top, this.width, this.height);
+    ctx.setFillStyle(getVal(this.fillStyle));
+    ctx.fillRect(layout.left, layout.top, layout.width(), layout.height());
     ctx.restore();
   }
 }

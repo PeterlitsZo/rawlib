@@ -35,11 +35,17 @@ function Section01Preview() {
   )
 }
 
-function Section01() {
+interface Section01Props {
+  setActive: (active: 1 | 2) => void;
+}
+
+function Section01(props: Section01Props) {
   return (
     <Page
       text={<Section01Text />}
       preview={<Section01Preview />}
+      active={1}
+      setActive={props.setActive}
     />
   )
 }

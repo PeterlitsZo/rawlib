@@ -32,3 +32,14 @@ export function calcLeftBottomXAndY(position: Position, width: number, height: n
     return { x: x - width, y: y + height / 2 };
   }
 }
+
+/** The pure value or a getter. */
+export type ValGetter<T> = T | (() => T);
+
+export function getVal<T>(v: ValGetter<T>): T {
+  if (typeof v === 'function') {
+    return (v as any)();
+  } else {
+    return v;
+  }
+}

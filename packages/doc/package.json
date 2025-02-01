@@ -9,10 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@wooorm/starry-night": "^3.6.0",
-    "solid-js": "^1.9.3",
+    "@rawlib/core": "workspace:*",
     "@rawlib/std-wrapper": "workspace:*",
-    "@rawlib/core": "workspace:*"
+    "@wooorm/starry-night": "^3.6.0",
+    "clsx": "^2.1.1",
+    "solid-js": "^1.9.3"
   },
   "devDependencies": {
     "@mdx-js/rollup": "^3.1.0",

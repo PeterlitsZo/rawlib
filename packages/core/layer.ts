@@ -10,6 +10,9 @@ export class Layer {
   needDraw: boolean;
   shapes: Array<Shape>;
 
+  firstDraw: boolean;
+
+  beforeDrawCallbacks: Array<() => void>;
   widthAndHeightChangedCallbacks: Array<() => void>;
 
   constructor(ctx: Context) {
@@ -29,6 +32,9 @@ export class Layer {
     this.needDraw = false;
     this.shapes = [];
 
+    this.firstDraw = true;
+
+    this.beforeDrawCallbacks = [];
     this.widthAndHeightChangedCallbacks = [];
   }
 
@@ -38,12 +44,23 @@ export class Layer {
 
   draw() {
     this.needDraw = true;
+    this.firstDraw = false;
+
+    if (this.firstDraw) {
+      for (const cb of this.beforeDrawCallbacks) {
+        cb();
+      }
+    }
 
     this.ctx.beforeDraw();
     for (const shape of this.shapes) {
       shape.draw(this);
     }
     this.ctx.afterDraw();
+  }
+
+  onBeforeDraw(cb: () => void) {
+    this.beforeDrawCallbacks.push(cb);
   }
 
   onWidthAndHeightChanged(cb: () => void) {

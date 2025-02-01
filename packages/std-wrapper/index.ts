@@ -60,10 +60,16 @@ export class StdWrapperCtx {
   restore() { this.canvasCtx.restore(); }
 
   setFillStyle(fillStyle: string) { this.canvasCtx.fillStyle = fillStyle; }
+  setStrokeStyle(strokeStyle: string) { this.canvasCtx.strokeStyle = strokeStyle; }
 
   fillRect(x: number, y: number, width: number, height: number) {
     this.canvasCtx.fillRect(x, y, width, height);
   }
+
+  beginPath() { this.canvasCtx.beginPath(); }
+  moveTo(x: number, y: number) { this.canvasCtx.moveTo(x, y); }
+  lineTo(x: number, y: number) { this.canvasCtx.lineTo(x, y); }
+  stroke() { this.canvasCtx.stroke(); }
 
   getWidth() { return this.width; }
   getHeight() { return this.height; }
