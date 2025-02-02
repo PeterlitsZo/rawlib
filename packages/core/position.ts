@@ -5,7 +5,7 @@ import type { Point } from "./point";
  * Position defines where to put the shape (e.g. Let the shape's center point
  * be at the (x, y)).
  */
-export interface Position {
+export interface Pos {
   anchor: Anchor;
   point: Point | (() => Point);
 }

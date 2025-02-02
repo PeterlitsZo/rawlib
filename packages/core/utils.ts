@@ -1,6 +1,6 @@
-import type { Position } from "./position";
+import type { Pos } from "./position";
 
-export function calcLeftBottomXAndY(position: Position, width: number, height: number) {
+export function calcLeftBottomXAndY(position: Pos, width: number, height: number) {
   const { x, y } = (() => {
     if (typeof position.point === 'function') {
       return position.point();

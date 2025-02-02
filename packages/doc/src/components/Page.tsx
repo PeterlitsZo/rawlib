@@ -2,11 +2,13 @@ import { JSXElement } from 'solid-js';
 import styles from './Page.module.scss';
 import clsx from 'clsx';
 
+export type PageNo = 1 | 2 | 3;
+
 interface PageProps {
   text: JSXElement;
   preview: JSXElement;
-  active: 1 | 2;
-  setActive: (active: 1 | 2) => void;
+  active: PageNo;
+  setActive: (active: PageNo) => void;
 }
 
 export function Page(props: PageProps) {
@@ -25,6 +27,12 @@ export function Page(props: PageProps) {
             onClick={() => props.setActive(2)}
           >
             02
+          </button>
+          <button
+            class={clsx(styles.NavButton, props.active === 3 && styles.Active)}
+            onClick={() => props.setActive(3)}
+          >
+            03
           </button>
         </div>
         <div class={styles.Content}>{props.text}</div>

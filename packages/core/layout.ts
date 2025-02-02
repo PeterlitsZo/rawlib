@@ -32,3 +32,8 @@ export class Layout {
 
   c() { return new Point(this.centerX(), this.centerY()); }
 }
+
+export interface LayoutSimple {
+  width(): number;
+  height(): number;
+}

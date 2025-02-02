@@ -1,10 +1,10 @@
 import { Page, PageNo } from '@/components/Page';
-import Section02Text from './Section02.mdx';
+import Section03Text from './Section03.mdx';
 import { onMount } from 'solid-js';
 import { StdWrapperCtx } from '@rawlib/std-wrapper';
-import { GroupShape, Layer, LineShape, Point, RectShape } from '@rawlib/core';
+import { FrameShape, GroupShape, Layer, LineShape, Point, RectShape } from '@rawlib/core';
 
-function Section02Preview() {
+function Section03Preview() {
   let canvasRef = null as HTMLCanvasElement | null;
   onMount(() => {
     if (canvasRef === null) {
@@ -87,13 +87,22 @@ function Section02Preview() {
     layer.onWidthAndHeightChanged(initLinesGroup);
     layer.add(linesGroup);
 
-    // The rectangle shape.
-    const rect = new RectShape({
-      width: 100,
-      height: 100,
-      fillStyle: 'black',
+    // The frame shape.
+    let frameWidth = () => Math.min(400, layer.layout.width() - 20);
+    let frameHeight = () => Math.min(200, layer.layout.height() - 20);
+    const frame = new FrameShape({
+      width: frameWidth,
+      height: frameHeight,
+      fillStyle: '#ccc3',
     });
-    layer.add(rect);
+    [0.50, 0.75, 0.25, 1.00, 0.25, 0.75, 0.65, 1.00].forEach((i) => {
+      frame.add(new RectShape({
+        width: 25,
+        height: () => (frameHeight() * i),
+        fillStyle: 'hotpink',
+      }));
+    })
+    layer.add(frame);
 
     layer.draw();
   })
@@ -112,15 +121,15 @@ interface Section02Props {
   setActive: (active: PageNo) => void;
 }
 
-function Section02(props: Section02Props) {
+function Section03(props: Section02Props) {
   return (
     <Page
-      text={<Section02Text />}
-      preview={<Section02Preview />}
-      active={2}
+      text={<Section03Text />}
+      preview={<Section03Preview />}
+      active={3}
       setActive={props.setActive}
     />
   )
 }
 
-export default Section02;
+export default Section03;

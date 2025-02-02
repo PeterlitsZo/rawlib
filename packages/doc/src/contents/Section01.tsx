@@ -1,4 +1,4 @@
-import { Page } from '@/components/Page';
+import { Page, PageNo } from '@/components/Page';
 import Section01Text from './Section01.mdx';
 import { onMount } from 'solid-js';
 import { StdWrapperCtx } from '@rawlib/std-wrapper';
@@ -36,7 +36,7 @@ function Section01Preview() {
 }
 
 interface Section01Props {
-  setActive: (active: 1 | 2) => void;
+  setActive: (active: PageNo) => void;
 }
 
 function Section01(props: Section01Props) {

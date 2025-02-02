@@ -1,5 +1,5 @@
 import { type Context } from "./context";
-import { Layout } from "./layout";
+import { Layout, type LayoutSimple } from "./layout";
 import { type Shape } from "./shape";
 
 export class Layer {
@@ -38,8 +38,17 @@ export class Layer {
     this.widthAndHeightChangedCallbacks = [];
   }
 
+  getLayout() {
+    return this.layout;
+  }
+
+  getLayoutSimple(): LayoutSimple {
+    return this.layout;
+  }
+
   add(shape: Shape) {
     this.shapes.push(shape);
+    shape.setParent(this);
   }
 
   draw() {
