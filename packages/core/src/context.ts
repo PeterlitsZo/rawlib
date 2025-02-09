@@ -1,3 +1,8 @@
+export interface ContextLayout {
+  width: number;
+  height: number;
+}
+
 export interface Context {
   beforeDraw(): void;
   afterDraw(): void;
@@ -17,8 +22,8 @@ export interface Context {
   lineTo(x: number, y: number): void;
   stroke(): void;
 
-  getWidth(): number;
-  getHeight(): number;
+  width(): number;
+  height(): number;
 
-  onWidthAndHeightChanged(cb: (width: number, height: number) => void): void;
+  onLayoutChanged(cb: (layout: ContextLayout) => void): void;
 }

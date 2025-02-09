@@ -8,8 +8,8 @@ here but the rawlib is just a pure JavaScript library so you can choose the
 framework you like):
 
 ```ts
-import { StdWrapperCtx } from '@rawlib/std-wrapper';
-import { Layer, RectShape } from '@rawlib/core';
+import { stdWrapperCtx } from '@rawlib/std-wrapper';
+import * as rr from '@rawlib/render';
 
 function Section01Preview() {
   let canvasRef = null as HTMLCanvasElement | null;
@@ -19,16 +19,24 @@ function Section01Preview() {
     }
 
     // The wrapper to talk with the standard canvas API and DOM element.
-    const ctx = new StdWrapperCtx(canvasRef);
+    const ctx = stdWrapperCtx(canvasRef);
 
     // We need to define the layer and add some shapes to it, then draw it.
-    const layer = new Layer(ctx);
-    const rect = new RectShape(layer.ctx, {
+    const layer = rr.layer(ctx);
+    const rect = rr.rect({
+      left: (layer.width() - 100) / 2,
+      top: (layer.height() - 100) / 2,
       width: 100,
       height: 100,
       fillStyle: 'black',
     });
     layer.add(rect);
+
+    layer.onLayoutChanged(() => {
+      rect
+        .left((layer.width() - 100) / 2)
+        .top((layer.height() - 100) / 2);
+    })
     layer.draw();
   });
 
@@ -43,18 +51,17 @@ function Section01Preview() {
 }
 ```
 
-We need a `StdWrapper` here to help us to talk with the standard canvas API and
-its DOM element -- we design it, to make sure `@rawlib/core` can be write
+We need a `stdWrapperCtx` here to help us to talk with the standard canvas API
+and its DOM element -- we design it, to make sure `@rawlib/core` can be write
 without the the need of a specific environment, but just the rawlib's context
 interface.  Some environment do not have a right / full canvas API (maybe you
 just want to run it in your embedded JavaScript environment without real
 HTML canvas element).
 
-Then we define a `Layer` and add a `RectShape` to it.  Finally, we draw the
-layer.
+Then we define a `layer` and add a `rect` to it.  Finally, we draw the layer.
 
-The default position of the shape is the center of its container.  So you can
-find that the rectangle is in the center of the canvas.
+We put the rectangle to the center of the layer, even if the layer's size is
+changed.
 
 If the canvas's size is changed, the context need to observe the change and let
 the layer to redraw, and all shapes in the layer need to recalculate their new

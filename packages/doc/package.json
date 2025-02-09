@@ -11,6 +11,9 @@
   "dependencies": {
     "@rawlib/core": "workspace:*",
     "@rawlib/std-wrapper": "workspace:*",
+    "@rawlib/render": "workspace:*",
+    "@rawlib/scale": "workspace:*",
+
     "@wooorm/starry-night": "^3.6.0",
     "clsx": "^2.1.1",
     "solid-js": "^1.9.3"

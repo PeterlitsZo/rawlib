@@ -1,80 +1,66 @@
-export class StdWrapperCtx {
-  canvasRef: HTMLCanvasElement;
-  canvasCtx: CanvasRenderingContext2D;
+import type { Context, ContextLayout } from '@rawlib/core';
 
-  width: number;
-  height: number;
-  dpr: number;
+export function stdWrapperCtx(canvasRef: HTMLCanvasElement): Context {
+  // Init the canvasRef and canvasCtx.
+  const canvasCtx = canvasRef.getContext('2d');
+  if (canvasCtx === null) {
+    throw new Error('failed to get 2D context');
+  }
 
-  resizeObserver: ResizeObserver;
+  // Init the width, height and dpr.
+  let width = canvasRef.offsetWidth;
+  let height = canvasRef.offsetHeight;
+  const dpr = window.devicePixelRatio;
 
-  widthAndHeightChangedCallbacks: Array<(width: number, height: number) => void>;
-
-  constructor(canvasRef: HTMLCanvasElement) {
-    // Init the canvasRef and canvasCtx.
-    this.canvasRef = canvasRef;
-    let canvasCtx = this.canvasRef.getContext('2d');
-    if (canvasCtx === null) {
-      throw new Error('cannot get the 2d context of canvas');
+  // Set the width and height of canvasRef.
+  /** Update the canvas layout if needed.  Return `true` if updated. */
+  function updateCanvasLayout(): boolean {
+    if (canvasRef.width === width * dpr && canvasRef.height === height * dpr) {
+      return false;
     }
-    this.canvasCtx = canvasCtx;
-
-    // Init the width, height and dpr.
-    this.width = this.canvasRef.offsetWidth;
-    this.height = this.canvasRef.offsetHeight;
-    this.dpr = window.devicePixelRatio;
-
-    // Init others.
-    this.resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        const w = entry.contentRect.width;
-        const h = entry.contentRect.height;
-
-        this.width = w;
-        this.height = h;
-        this.canvasRef.width = this.width * this.dpr;
-        this.canvasRef.height = this.height * this.dpr;
-
-        for (const cb of this.widthAndHeightChangedCallbacks) {
-          cb(this.width, this.height);
-        }
-      }
-    });
-    this.resizeObserver.observe(this.canvasRef);
-    this.widthAndHeightChangedCallbacks = [];
-
-    // Set the width and height of canvasRef.
-    this.canvasRef.width = this.width * this.dpr;
-    this.canvasRef.height = this.height * this.dpr;
+    canvasRef.width = width * dpr;
+    canvasRef.height = height * dpr;
+    return true;
   }
+  updateCanvasLayout();
 
-  beforeDraw() {
-    this.canvasCtx.reset();
-    this.canvasCtx.scale(this.dpr, this.dpr);
-  }
-  afterDraw() {}
+  // Init others.
+  const layoutChangedCallbacks: Array<(layout: ContextLayout) => void> = [];
+  let resizeObserver = new ResizeObserver(([entry]) => {
+    ({ width, height } = entry.contentRect);
+    if (updateCanvasLayout()) {
+      layoutChangedCallbacks.forEach(cb => cb({ width, height }));
+    }
+  })
+  resizeObserver.observe(canvasRef);
 
-  reset() { this.canvasCtx.reset(); }
+  return {
+    beforeDraw: () => {
+      canvasCtx.reset();
+      canvasCtx.scale(dpr, dpr);
+    },
+    afterDraw: () => {},
 
-  save() { this.canvasCtx.save(); }
-  restore() { this.canvasCtx.restore(); }
+    reset: canvasCtx.reset.bind(canvasCtx),
 
-  setFillStyle(fillStyle: string) { this.canvasCtx.fillStyle = fillStyle; }
-  setStrokeStyle(strokeStyle: string) { this.canvasCtx.strokeStyle = strokeStyle; }
+    save: canvasCtx.save.bind(canvasCtx),
+    restore: canvasCtx.restore.bind(canvasCtx),
 
-  fillRect(x: number, y: number, width: number, height: number) {
-    this.canvasCtx.fillRect(x, y, width, height);
-  }
+    setFillStyle: (fillStyle: string) => { canvasCtx.fillStyle = fillStyle; },
+    setStrokeStyle: (strokeStyle: string) => { canvasCtx.strokeStyle = strokeStyle; },
 
-  beginPath() { this.canvasCtx.beginPath(); }
-  moveTo(x: number, y: number) { this.canvasCtx.moveTo(x, y); }
-  lineTo(x: number, y: number) { this.canvasCtx.lineTo(x, y); }
-  stroke() { this.canvasCtx.stroke(); }
+    fillRect: canvasCtx.fillRect.bind(canvasCtx),
 
-  getWidth() { return this.width; }
-  getHeight() { return this.height; }
+    beginPath: canvasCtx.beginPath.bind(canvasCtx),
+    moveTo: canvasCtx.moveTo.bind(canvasCtx),
+    lineTo: canvasCtx.lineTo.bind(canvasCtx),
+    stroke: canvasCtx.stroke.bind(canvasCtx),
 
-  onWidthAndHeightChanged(cb: (width: number, height: number) => void) {
-    this.widthAndHeightChangedCallbacks.push(cb);
+    width: () => width,
+    height: () => height,
+
+    onLayoutChanged: (cb: (layout: ContextLayout) => void) => {
+      layoutChangedCallbacks.push(cb);
+    },
   }
 }

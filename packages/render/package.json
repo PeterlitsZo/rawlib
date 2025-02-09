@@ -1,5 +1,5 @@
 {
-  "name": "@rawlib/std-wrapper",
+  "name": "@rawlib/render",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {

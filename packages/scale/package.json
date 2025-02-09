@@ -1,9 +1,10 @@
 {
-  "name": "@rawlib/std-wrapper",
+  "name": "@rawlib/scale",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest",
+
     "@rawlib/core": "workspace:*"
   },
   "peerDependencies": {

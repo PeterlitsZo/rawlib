@@ -1,8 +1,9 @@
 import { Page, PageNo } from '@/components/Page';
 import Section02Text from './Section02.mdx';
 import { onMount } from 'solid-js';
-import { StdWrapperCtx } from '@rawlib/std-wrapper';
-import { GroupShape, Layer, LineShape, Point, RectShape } from '@rawlib/core';
+import { stdWrapperCtx } from '@rawlib/std-wrapper';
+import * as rr from '@rawlib/render';
+import { Point } from '@rawlib/core';
 
 function Section02Preview() {
   let canvasRef = null as HTMLCanvasElement | null;
@@ -11,11 +12,11 @@ function Section02Preview() {
       return;
     }
 
-    const ctx = new StdWrapperCtx(canvasRef);
-    const layer = new Layer(ctx);
+    const ctx = stdWrapperCtx(canvasRef);
+    const layer = rr.layer(ctx);
 
     // Some lines.
-    const linesGroup = new GroupShape();
+    const linesGroup = rr.group();
     const initLinesGroup = () => {
       linesGroup.clear();
 
@@ -38,7 +39,7 @@ function Section02Preview() {
           if (i % 4 === 0) {
             strokeStyle = '#ddd';
           }
-          const line = new LineShape({
+          const line = rr.line({
             from: from,
             to: to,
             strokeStyle,
@@ -49,50 +50,57 @@ function Section02Preview() {
 
       // Init the grid.
       addGridLines(
-        layer.layout.l(), layer.layout.r(),
+        layer.layout().l(), layer.layout().r(),
         _ => 0, i => i * 25,
-        (from, _to) => from.y > layer.layout.b().y,
+        (from, _to) => from.y > layer.layout().b().y,
       );
       addGridLines(
-        layer.layout.l(), layer.layout.r(),
+        layer.layout().l(), layer.layout().r(),
         _ => 0, i => -i * 25,
-        (from, _to) => from.y < layer.layout.t().y,
+        (from, _to) => from.y < layer.layout().t().y,
       )
       addGridLines(
-        layer.layout.t(), layer.layout.b(),
+        layer.layout().t(), layer.layout().b(),
         i => i * 25, _ => 0,
-        (from, _to) => from.x > layer.layout.r().x,
+        (from, _to) => from.x > layer.layout().r().x,
       );
       addGridLines(
-        layer.layout.t(), layer.layout.b(),
+        layer.layout().t(), layer.layout().b(),
         i => -i * 25, _ => 0,
-        (from, _to) => from.x < layer.layout.l().x,
+        (from, _to) => from.x < layer.layout().l().x,
       );
 
       // Init the X and Y axis.
-      const xAxis = new LineShape({
-        from: layer.layout.l(),
-        to: layer.layout.r(),
+      const xAxis = rr.line({
+        from: layer.layout().l(),
+        to: layer.layout().r(),
         strokeStyle: '#ccc',
       });
-      const yAxis = new LineShape({
-        from: layer.layout.t(),
-        to: layer.layout.b(),
+      const yAxis = rr.line({
+        from: layer.layout().t(),
+        to: layer.layout().b(),
         strokeStyle: '#ccc',
       });
       linesGroup.add(xAxis);
       linesGroup.add(yAxis);
     }
-    layer.onBeforeDraw(initLinesGroup);
-    layer.onWidthAndHeightChanged(initLinesGroup);
+    initLinesGroup();
+    layer.onLayoutChanged(initLinesGroup);
     layer.add(linesGroup);
 
     // The rectangle shape.
-    const rect = new RectShape({
+    const rect = rr.rect({
+      left: (layer.width() - 100) / 2,
+      top: (layer.height() - 100) / 2,
       width: 100,
       height: 100,
       fillStyle: 'black',
     });
+    layer.onLayoutChanged(() => {
+      rect
+        .left((layer.width() - 100) / 2)
+        .top((layer.height() - 100) / 2)
+    })
     layer.add(rect);
 
     layer.draw();

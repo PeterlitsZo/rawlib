@@ -1,8 +1,10 @@
-import { Page, PageNo } from '@/components/Page';
-import Section01Text from './Section01.mdx';
 import { onMount } from 'solid-js';
-import { StdWrapperCtx } from '@rawlib/std-wrapper';
-import { Layer, RectShape } from '@rawlib/core';
+import { stdWrapperCtx } from '@rawlib/std-wrapper';
+import * as rr from '@rawlib/render';
+
+import { Page, PageNo } from '@/components/Page';
+
+import Section01Text from './Section01.mdx';
 
 function Section01Preview() {
   let canvasRef = null as HTMLCanvasElement | null;
@@ -12,16 +14,24 @@ function Section01Preview() {
     }
 
     // The wrapper to talk with the standard canvas API and DOM element.
-    const ctx = new StdWrapperCtx(canvasRef);
+    const ctx = stdWrapperCtx(canvasRef);
 
     // We need to define the layer and add some shapes to it, then draw it.
-    const layer = new Layer(ctx);
-    const rect = new RectShape({
+    const layer = rr.layer(ctx);
+    const rect = rr.rect({
+      left: (layer.width() - 100) / 2,
+      top: (layer.height() - 100) / 2,
       width: 100,
       height: 100,
       fillStyle: 'black',
     });
     layer.add(rect);
+
+    layer.onLayoutChanged(() => {
+      rect
+        .left((layer.width() - 100) / 2)
+        .top((layer.height() - 100) / 2)
+    })
     layer.draw();
   })
 
