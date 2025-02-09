@@ -101,33 +101,39 @@ function Section03Preview() {
       fillStyle: '#ccc3',
     });
     layer.add(frame);
+    layer.onLayoutChanged(() => {
+      frame
+        .left((layer.width() - frameWidth()) / 2)
+        .top((layer.height() - frameHeight()) / 2)
+        .width(frameWidth())
+        .height(frameHeight());
+    })
 
     // The bars.
-    const data = [0.50, 0.75, 0.25, 1.00, 0.25, 0.75, 0.65, 1.00];
-    const names = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-    const band = rs.band()
-      .domain(names)
-      .range([(layer.width() - frameWidth()) / 2, (layer.width() + frameWidth()) / 2])
-      .bandwidth(25);
-    names.forEach((name, i) => {
-      const bar = rr.rect({
-        left: band(name),
-        top: (layer.height() + frameHeight()) / 2 - (frameHeight() * data[i]),
-        width: 25,
-        height: (frameHeight() * data[i]),
-        fillStyle: 'hotpink',
-      });
-      layer.add(bar);
-    });
+    const bars = rr.group();
+    const initBars = () => {
+      bars.clear();
 
-    // [0.50, 0.75, 0.25, 1.00, 0.25, 0.75, 0.65, 1.00].forEach((i) => {
-    //   frame.add(new RectShape({
-    //     width: 25,
-    //     height: () => (frameHeight() * i),
-    //     fillStyle: 'hotpink',
-    //   }));
-    // })
-    // layer.add(frame);
+      const data = [0.50, 0.75, 0.25, 1.00, 0.25, 0.75, 0.65, 1.00];
+      const names = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+      const band = rs.band()
+        .domain(names)
+        .range([(layer.width() - frameWidth()) / 2, (layer.width() + frameWidth()) / 2])
+        .bandwidth(25);
+      names.forEach((name, i) => {
+        const bar = rr.rect({
+          left: band(name),
+          top: (layer.height() + frameHeight()) / 2 - (frameHeight() * data[i]),
+          width: 25,
+          height: (frameHeight() * data[i]),
+          fillStyle: 'hotpink',
+        });
+        bars.add(bar);
+      });
+    }
+    initBars();
+    layer.onLayoutChanged(initBars);
+    layer.add(bars);
 
     layer.draw();
   })
